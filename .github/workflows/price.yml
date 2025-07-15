@@ -5,19 +5,24 @@ on:
   workflow_dispatch:    # ручной запуск
 jobs:
   run:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: microsoft/playwright-github-action@v1
-      - uses: actions/setup-python@v4
-        with: {python-version: '3.12'}
-      - run: pip install -r requirements.txt
-      - name: run monitor
-        run: python price_monitor.py
-        env:
-          BOT_TOKEN:       ${{ secrets.BOT_TOKEN }}
-          CHAT_ID:         ${{ secrets.CHAT_ID }}
-          URL:             ${{ secrets.URL }}
-          SELECTOR_NAME:   ${{ secrets.SELECTOR_NAME }}
-          SELECTOR_PRICE:  ${{ secrets.SELECTOR_PRICE }}
-          THRESHOLD:       ${{ secrets.THRESHOLD }}
+    runs-on: ubuntu-22.04        # фиксируем стабильный образ
+steps:
+  - uses: actions/checkout@v4
+
+  - uses: actions/setup-python@v4
+    with: { python-version: '3.12' }
+
+  - run: pip install -r requirements.txt
+
+  - name: install playwright browsers
+    run: python -m playwright install --with-deps
+
+  - name: run monitor
+    run: python price_monitor.py
+    env:
+      BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+      CHAT_ID:   ${{ secrets.CHAT_ID }}
+      URL:       ${{ secrets.URL }}
+      SELECTOR_NAME:   ${{ secrets.SELECTOR_NAME }}
+      SELECTOR_PRICE:  ${{ secrets.SELECTOR_PRICE }}
+      THRESHOLD:       ${{ secrets.THRESHOLD }}
