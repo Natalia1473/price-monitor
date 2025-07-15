@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Yandex Market",
+    "url": "https://market.yandex.ru/search?text=apple%20macbook%20air%2015%20m4",
+    "selector_name": "[data-auto=\"snippet-title\"]",
+    "selector_price": "[data-auto=\"snippet-price-current\"]"
+  },
+  {
+    "name": "Ozon",
+    "url": "https://www.ozon.ru/search/?from_global=true&text=macbook%20air%2015%20m4",
+    "selector_name": ".s1n5a64-0.dFqCIO",
+    "selector_price": ".s1n5a64-1.kWdfkH"
+  },
+  {
+    "name": "Wildberries",
+    "url": "https://www.wildberries.ru/catalog/0/search.aspx?search=macbook%20air%2015%20m4",
+    "selector_name": ".product-card__brand-name",
+    "selector_price": ".product-card__price"
+  }
+]
