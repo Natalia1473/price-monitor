@@ -7,22 +7,18 @@ on:
 
 jobs:
   price:
-    runs-on: ubuntu-22.04    # фикс-образ, нужен Playwright
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v4
         with:
           python-version: '3.12'
-
       - name: Install Python deps
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
       - name: Install Playwright browsers
         run: python -m playwright install --with-deps
-
       - name: Run monitor
         run: python price_monitor.py
         env:
@@ -32,3 +28,11 @@ jobs:
           SELECTOR_NAME:    ${{ secrets.SELECTOR_NAME }}
           SELECTOR_PRICE:   ${{ secrets.SELECTOR_PRICE }}
           THRESHOLD:        ${{ secrets.THRESHOLD }}
+
+      # ← добавь здесь
+      - name: upload history
+        uses: actions/upload-artifact@v4
+        with:
+          name: prices-history
+          path: prices.json
+          if-no-files-found: ignore
