@@ -92,7 +92,7 @@ async def main() -> None:
     if not all([BOT_TOKEN, CHAT_ID, URL, SEL_NAME, SEL_PRICE]):
         raise RuntimeError("Не заданы все обязательные переменные окружения")
 
-    bot = Bot(BOT_TOKEN, parse_mode=None)
+    bot = Bot(BOT_TOKEN)
     curr = await scrape()
 
     if DATA_FILE.exists():
