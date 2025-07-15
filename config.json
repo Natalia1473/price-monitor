@@ -7,13 +7,13 @@
   },
   {
     "name": "Ozon",
-    "url": "https://www.ozon.ru/seller/dubay-dyuti-fri-2090753/?miniapp=seller_2090753",
+    "url": "https://market.yandex.ru/business--said-1/167831955",
     "selector_name": ".s1n5a64-0.dFqCIO",
     "selector_price": ".s1n5a64-1.kWdfkH"
   },
   {
     "name": "Wildberries",
-    "url": "https://www.wildberries.ru/catalog/0/search.aspx?search=macbook%20air%2015%20m4",
+    "url": "https://www.wildberries.ru/seller/4490012",
     "selector_name": ".product-card__brand-name",
     "selector_price": ".product-card__price"
   }
