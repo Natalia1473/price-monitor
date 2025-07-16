@@ -8,8 +8,8 @@
   {
     "name": "Ozon",
     "url": "https://www.ozon.ru/search/?from_global=true&text=apple%20macbook%20air%2015%20m4",
-    "selector_name": ".s1n5a64-0.dFqCIO",
-    "selector_price": ".s1n5a64-1.kWdfkH"
+    "selector_name": "a.tile-hover-target > .tile-title__text",
+    "selector_price": "div.price-price > span.price-text"
   },
   {
     "name": "Wildberries",
