@@ -7,13 +7,13 @@
   },
   {
     "name": "Ozon",
-    "url": "https://market.yandex.ru/business--said-1/167831955",
+    "url": "https://www.ozon.ru/search/?from_global=true&text=apple%20macbook%20air%2015%20m4",
     "selector_name": ".s1n5a64-0.dFqCIO",
     "selector_price": ".s1n5a64-1.kWdfkH"
   },
   {
     "name": "Wildberries",
-    "url": "https://www.wildberries.ru/seller/4490012",
+    "url": "https://www.wildberries.ru/catalog/0/search.aspx?search=apple%20macbook%20air%2015%20m4",
     "selector_name": ".product-card__brand-name",
     "selector_price": ".product-card__price"
   }
