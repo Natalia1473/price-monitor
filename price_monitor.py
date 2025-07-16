@@ -81,8 +81,8 @@ async def main() -> None:
                                / merged["price_old"] * 100).round(2)
             changed = merged[merged["delta"].abs() >= THRESHOLD].dropna()
             if not changed.empty:
-                changed["site"] = site["name"]
-                all_changes.append(changed[["site","name","price_old","price","delta"]])
+            changed["site"] = site["name"]
+            all_changes.append(changed[["site","name","price_old","price","delta"]])
 
         # Сохраняем новый снимок
         df.to_json(hist_file, orient="records", force_ascii=False, indent=2)
@@ -90,7 +90,8 @@ async def main() -> None:
     # Если есть хоть одно изменение — шлём единое сообщение
     if all_changes:
         lines = []
-        for df in all_changes:
+         for df in all_changes:
+        print(f"{df.iloc[0]['site']}: найдено {len(df)} изменений")
             for r in df.itertuples(index=False):
                 lines.append(
                     f"💱 <b>{r.site}</b>: {r.name}\n"
