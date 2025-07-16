@@ -3,11 +3,11 @@
 Отслеживает цены на нескольких сайтах и шлёт уведомление в Telegram
 при изменении цены ≥ THRESHOLD%.
 
-Структура:
-  ├─ config.json    – массив конфигураций сайтов
-  ├─ history/       – папка для истории цен каждого сайта
-  ├─ price_monitor.py
-  └─ requirements.txt
+Структура проекта:
+  ├ config.json       – массив конфигураций сайтов
+  ├ history/          – папка для истории цен каждого сайта
+  ├ price_monitor.py  – этот файл
+  └ requirements.txt
 """
 
 import json
@@ -21,11 +21,11 @@ from telegram import Bot
 from dotenv import load_dotenv
 
 # ─────────────── Настройки ───────────────
-load_dotenv()  # локально читает .env, на Actions – Secrets
+load_dotenv()  # локально читает .env, в Actions – Secrets
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID   = int(os.getenv("CHAT_ID", "0"))
-THRESHOLD = float(os.getenv("THRESHOLD", "1"))
+THRESHOLD = float(os.getenv("THRESHOLD", "1"))  # в процентах
 
 if not BOT_TOKEN or not CHAT_ID:
     raise RuntimeError("Не заданы BOT_TOKEN или CHAT_ID")
@@ -40,27 +40,31 @@ with open("config.json", encoding="utf-8") as f:
 
 # ───────────── Функция скрейпа ─────────────
 async def scrape_site(name: str, url: str, sel_name: str, sel_price: str) -> pd.DataFrame:
-    """Собирает DataFrame {name, price} для одного сайта."""
+    """Собирает DataFrame с колонками ['name','price'] для одного сайта."""
     async with async_playwright() as p:
         browser = await p.firefox.launch(headless=True)
         page = await browser.new_page()
-
         try:
             await page.goto(url, timeout=120_000, wait_until="domcontentloaded")
         except Exception:
-            # таймаут или networkidle — продолжаем с тем, что загрузилось
+            # если не успело загрузиться полностью — продолжаем парсинг
             pass
 
         raw_names  = await page.locator(sel_name).all_text_contents()
         raw_prices = await page.locator(sel_price).all_text_contents()
         await browser.close()
 
+    # убираем лишние пробелы в названиях
     names  = [n.strip() for n in raw_names]
+    # чистим цену вида "155 028 ₽" → 155028.0
     prices = [
-        float("".join(ch for ch in p if ch.isdigit() or ch in ".,").replace(",", ".") or 0)
-        for p in raw_prices
+        float("".join(ch for ch in txt if ch.isdigit() or ch in ".,").replace(",", ".") or 0)
+        for txt in raw_prices
     ]
-    print(f"[{name}] собрано {len(names)} позиций")  # отладка
+
+    # DEBUG: выводим в лог количество спаршенных элементов
+    print(f"[{name}] найдено {len(names)} названий и {len(prices)} цен")
+
     return pd.DataFrame({"name": names, "price": prices})
 
 # ───────────── Основной код ─────────────
@@ -86,12 +90,12 @@ async def main() -> None:
 
             if not changed.empty:
                 changed["site"] = site["name"]
-                all_changes.append(changed[["site","name","price_old","price","delta"]])
+                all_changes.append(changed[["site", "name", "price_old", "price", "delta"]])
 
-        # сохраняем текущее состояние
+        # сохраняем новый снимок цен
         df.to_json(hist_file, orient="records", force_ascii=False, indent=2)
 
-    # отладочный вывод по сайтам
+    # DEBUG: сколько изменений по каждому сайту
     for df in all_changes:
         print(f"{df.iloc[0]['site']}: найдено {len(df)} изменений")
 
